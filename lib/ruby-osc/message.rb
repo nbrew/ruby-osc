@@ -36,6 +36,9 @@ module OSC
       msg
     end
 
+    # Decode OSC Type Tags from stream.
+    #
+    # List available here: https://opensoundcontrol.stanford.edu/spec-1_0.html
     def self.decode_message(scanner)
       pos = scanner.pos
       begin
@@ -66,6 +69,10 @@ module OSC
             str  = scanner.scan(/.{#{ size }}/nm)
             scanner.pos += OSC.padding_size(size + 4)
             args.push Blob.new(str)
+          when "F" #=> False. No bytes are allocated in the argument data.
+            args.push false
+          when "T" #=> True. No bytes are allocated in the argument data.
+            args.push true
           else
             raise DecodeError, "#{ tag } is not a known tag"
           end

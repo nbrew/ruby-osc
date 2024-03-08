@@ -24,11 +24,20 @@ module OSC
     end
   end
 
+  class OSCTrue
+    def to_osc_type() 'T' end
+  end
+
+  class OSCFalse
+    def to_osc_type() 'F' end
+  end
+
   def self.coerce_argument(arg)
     case arg
     when OSCArgument then arg.to_osc_type
     when Symbol      then arg.to_s
     when String, Float, Integer, Blob, String then arg # Osc 1.0 spec
+    when TrueClass, FalseClass then arg
     else
       raise(TypeError, "#{ arg.inspect } is not a valid Message argument")
     end
